@@ -1,4 +1,5 @@
 """Module with embedding visualization tools."""
+
 import functools
 import inspect
 import itertools
@@ -97,7 +98,6 @@ class GraphVisualizer:
         minimum_node_degree: int = 0,
         maximum_node_degree: Optional[int] = None,
         only_from_same_component: Union[bool, str] = "auto",
-        
         source_node_types_names: Optional[Union[str, List[str]]] = None,
         destination_node_types_names: Optional[Union[str, List[str]]] = None,
         source_edge_types_names: Optional[Union[str, List[str]]] = None,
@@ -382,7 +382,6 @@ class GraphVisualizer:
                 graph_to_avoid=self._support,
                 support=self._support,
                 only_from_same_component=only_from_same_component,
-                
                 **edge_prediction_graph_kwargs,
             )
         except ValueError as exception:
@@ -620,7 +619,8 @@ class GraphVisualizer:
                         random_state=self._random_state,
                         verbose=self._verbose,
                         learning_rate=200,
-                        n_iter=400,
+                        # n_iter=400,  # deprecated in 1.5, removed in 1.7
+                        max_iter=400,
                         init="random",
                         method="exact" if self._n_components == 4 else "barnes_hut",
                     ),
@@ -703,11 +703,7 @@ class GraphVisualizer:
         # be applied to the embedding before providing it to this visualization tool.
         if "complex" in str(X.dtype):
             X = np.hstack([np.real(X), np.imag(X)])
-        if (
-            self._decomposition_method == "TSNE"
-            and X.shape[1] > 50
-            and X.shape[0] > 50
-        ):
+        if self._decomposition_method == "TSNE" and X.shape[1] > 50 and X.shape[0] > 50:
             X = PCA(n_components=50, random_state=self._random_state).fit_transform(X)
         return self.get_decomposition_method()(X)
 
@@ -878,7 +874,9 @@ class GraphVisualizer:
         )
 
         self._node_decomposition = self.decompose(node_embedding)
-        assert self._node_decomposition.shape[0] == self.get_number_of_subsampled_nodes()
+        assert (
+            self._node_decomposition.shape[0] == self.get_number_of_subsampled_nodes()
+        )
 
     def _get_positive_edges_embedding(
         self,
@@ -977,7 +975,9 @@ class GraphVisualizer:
             allow_automatic_feature=True,
         )
 
-        self._currently_plotting_edge_embedding = len(node_features) + len(node_type_features) == 0
+        self._currently_plotting_edge_embedding = (
+            len(node_features) + len(node_type_features) == 0
+        )
         self._positive_edge_decomposition = self.decompose(
             self._get_positive_edges_embedding(
                 node_features=node_features,
@@ -1015,7 +1015,7 @@ class GraphVisualizer:
             aligned_mapping=True,
             include_both_undirected_edges=False,
         )
-    
+
         edge_features = [
             feature
             for edge_feature in edge_features
@@ -1031,9 +1031,17 @@ class GraphVisualizer:
         )
         return graph_transformer.transform(
             graph,
-            node_types=(graph if graph.has_node_types() and graph_transformer.has_node_type_features() else None),
-            edge_types=(graph if graph.has_edge_types() and graph_transformer.has_edge_type_features() else None),
-            edge_features=edge_features
+            node_types=(
+                graph
+                if graph.has_node_types() and graph_transformer.has_node_type_features()
+                else None
+            ),
+            edge_types=(
+                graph
+                if graph.has_edge_types() and graph_transformer.has_edge_type_features()
+                else None
+            ),
+            edge_features=edge_features,
         )
 
     def _get_negative_edge_embedding(
@@ -1130,7 +1138,9 @@ class GraphVisualizer:
             edge_features=edge_features,
             allow_automatic_feature=True,
         )
-        self._currently_plotting_edge_embedding = len(node_features) + len(node_type_features) == 0
+        self._currently_plotting_edge_embedding = (
+            len(node_features) + len(node_type_features) == 0
+        )
         positive_edge_embedding = self._get_positive_edges_embedding(
             node_features=node_features,
             node_type_features=node_type_features,
@@ -1373,13 +1383,13 @@ class GraphVisualizer:
         if train_indices is None and test_indices is None:
             assert isinstance(points, np.ndarray), "Points must be a numpy array."
             if self._n_components == 2:
-                assert (
-                    points.shape[1] == 2
-                ), f"Points must be 2-dimensional, but they are {points.shape[1]}-dimensional."
+                assert points.shape[1] == 2, (
+                    f"Points must be 2-dimensional, but they are {points.shape[1]}-dimensional."
+                )
             elif self._n_components == 3:
-                assert (
-                    points.shape[1] == 3
-                ), f"Points must be 3-dimensional, but they are {points.shape[1]}-dimensional."
+                assert points.shape[1] == 3, (
+                    f"Points must be 3-dimensional, but they are {points.shape[1]}-dimensional."
+                )
             elif self._n_components == 4:
                 points = points[:, :3]
             else:
@@ -1723,7 +1733,7 @@ class GraphVisualizer:
             type_caption = f"The {title.lower()} form {descriptor}"
         else:
             type_caption = (
-                f"The {title.lower()} do not appear " "to form recognizable clusters"
+                f"The {title.lower()} do not appear to form recognizable clusters"
             )
 
         caption = f"{color_caption}. {type_caption} (Balanced accuracy: {mean_accuracy:.2%} ± {std_accuracy:.2%})"
@@ -2334,7 +2344,7 @@ class GraphVisualizer:
                 descriptor = "may be considered an edge prediction feature"
             metric_caption = f"This metric {descriptor}"
         else:
-            metric_caption = "The metric is not useful as an " "edge prediction feature"
+            metric_caption = "The metric is not useful as an edge prediction feature"
 
         caption = f"<i>{metric_name} heatmap</i>. {metric_caption} (Balanced accuracy: {mean_accuracy:.2%} ± {std_accuracy:.2%}).{color_caption}"
 
@@ -2380,9 +2390,7 @@ class GraphVisualizer:
             figure, axes = plt.subplots(figsize=(5, 5))
             figure.patch.set_facecolor("white")
 
-        number_of_negative_edges = (
-            self._negative_graph.get_number_of_edges()
-        )
+        number_of_negative_edges = self._negative_graph.get_number_of_edges()
 
         if edge_metrics is None:
             edge_metrics = np.concatenate(
@@ -3566,7 +3574,10 @@ class GraphVisualizer:
         assert isinstance(metric_name, str)
         assert len(metric_name) > 0
         assert isinstance(metric, np.ndarray)
-        assert metric.shape[0] == self._graph.get_number_of_nodes() or metric.shape[0] == self._node_decomposition.shape[0], (
+        assert (
+            metric.shape[0] == self._graph.get_number_of_nodes()
+            or metric.shape[0] == self._node_decomposition.shape[0]
+        ), (
             f"Metric shape {metric.shape} does not match "
             f"node decomposition shape {self._node_decomposition.shape}. "
             f"The graph has {self._graph.get_number_of_nodes()} nodes."
@@ -3611,11 +3622,7 @@ class GraphVisualizer:
             scatter_kwargs={
                 **({} if scatter_kwargs is None else scatter_kwargs),
                 "cmap": plt.cm.get_cmap("RdYlBu"),
-                **(
-                    {"norm": LogNorm()}
-                    if use_log_scale and not zeroed
-                    else {}
-                ),
+                **({"norm": LogNorm()} if use_log_scale and not zeroed else {}),
             },
             train_indices=train_indices,
             test_indices=test_indices,
@@ -4438,11 +4445,19 @@ class GraphVisualizer:
                 [
                     graph_transformer.transform(
                         self._negative_graph,
-                        node_types=(self._negative_graph if graph_transformer.has_node_type_features() else None),
+                        node_types=(
+                            self._negative_graph
+                            if graph_transformer.has_node_type_features()
+                            else None
+                        ),
                     ),
                     graph_transformer.transform(
                         self._positive_graph,
-                        node_types=(self._positive_graph if graph_transformer.has_node_type_features() else None),
+                        node_types=(
+                            self._positive_graph
+                            if graph_transformer.has_node_type_features()
+                            else None
+                        ),
                     ),
                 ]
             ).flatten(),
@@ -4505,11 +4520,19 @@ class GraphVisualizer:
                 [
                     graph_transformer.transform(
                         self._negative_graph,
-                        node_types=(self._negative_graph if graph_transformer.has_node_type_features() else None),
+                        node_types=(
+                            self._negative_graph
+                            if graph_transformer.has_node_type_features()
+                            else None
+                        ),
                     ),
                     graph_transformer.transform(
                         self._positive_graph,
-                        node_types=(self._positive_graph if graph_transformer.has_node_type_features() else None),
+                        node_types=(
+                            self._positive_graph
+                            if graph_transformer.has_node_type_features()
+                            else None
+                        ),
                     ),
                 ]
             ),
@@ -4846,13 +4869,13 @@ class GraphVisualizer:
             Whether to return a caption for the plot.
         """
         assert isinstance(metric, np.ndarray), (
-            "The metric must be a numpy array! " f"Got {type(metric)} instead."
+            f"The metric must be a numpy array! Got {type(metric)} instead."
         )
         assert metric.ndim == 1, (
-            "The metric must be a 1D array! " f"Got {metric.ndim} dimensions instead."
+            f"The metric must be a 1D array! Got {metric.ndim} dimensions instead."
         )
         assert isinstance(metric_name, str), (
-            "The metric name must be a string! " f"Got {type(metric_name)} instead."
+            f"The metric name must be a string! Got {type(metric_name)} instead."
         )
         assert len(metric_name) > 0
 
@@ -5401,7 +5424,7 @@ class GraphVisualizer:
                 return plot_distance(
                     node_features=node_features,
                     node_type_features=node_type_features,
-                    **kwargs
+                    **kwargs,
                 )
 
             return wrapped_plot_distance
@@ -5415,31 +5438,37 @@ class GraphVisualizer:
         ]
 
         if len(node_features) + len(node_type_features) > 0:
-            edge_scatter_plot_methods_to_call.extend([
-                plot_distance_wrapper(
-                    self.plot_positive_and_negative_edges_euclidean_distance
-                ),
-                plot_distance_wrapper(
-                    self.plot_positive_and_negative_edges_cosine_similarity
-                ),
-            ])
+            edge_scatter_plot_methods_to_call.extend(
+                [
+                    plot_distance_wrapper(
+                        self.plot_positive_and_negative_edges_euclidean_distance
+                    ),
+                    plot_distance_wrapper(
+                        self.plot_positive_and_negative_edges_cosine_similarity
+                    ),
+                ]
+            )
 
-        distribution_plot_methods_to_call.extend([
-            self.plot_positive_and_negative_adamic_adar_histogram,
-            self.plot_positive_and_negative_jaccard_coefficient_histogram,
-            self.plot_positive_and_negative_preferential_attachment_histogram,
-            self.plot_positive_and_negative_resource_allocation_index_histogram,
-        ])
+        distribution_plot_methods_to_call.extend(
+            [
+                self.plot_positive_and_negative_adamic_adar_histogram,
+                self.plot_positive_and_negative_jaccard_coefficient_histogram,
+                self.plot_positive_and_negative_preferential_attachment_histogram,
+                self.plot_positive_and_negative_resource_allocation_index_histogram,
+            ]
+        )
 
         if len(node_features) + len(node_type_features) > 0:
-            distribution_plot_methods_to_call.extend([
-                plot_distance_wrapper(
-                    self.plot_positive_and_negative_edges_euclidean_distance_histogram
-                ),
-                plot_distance_wrapper(
-                    self.plot_positive_and_negative_edges_cosine_similarity_histogram
-                ),
-            ])
+            distribution_plot_methods_to_call.extend(
+                [
+                    plot_distance_wrapper(
+                        self.plot_positive_and_negative_edges_euclidean_distance_histogram
+                    ),
+                    plot_distance_wrapper(
+                        self.plot_positive_and_negative_edges_cosine_similarity_histogram
+                    ),
+                ]
+            )
 
         if (
             not self._currently_plotting_edge_embedding

@@ -67,7 +67,7 @@ setup(
         "tqdm",
         "humanize",
         "matplotlib>=3.9",
-        "scikit-learn>=1.2",
+        "scikit-learn>=1.5",
         "dict_hash>=1.1.32",
         "userinput>=1.0.20",
         "ddd_subplots>=1.0.27",
