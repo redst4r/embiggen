@@ -20,6 +20,7 @@ class Node2VecEnsmallen(EnsmallenEmbedder):
         "Node2Vec CBOW": models.CBOW,
         "Node2Vec SkipGram": models.SkipGram,
         "Node2Vec GloVe": models.GloVe,
+        "Node2Vec Dreamwalk": models.DreamWalk,
         "Walklets CBOW": models.WalkletsCBOW,
         "Walklets SkipGram": models.WalkletsSkipGram,
         "Walklets GloVe": models.WalkletsGloVe,
@@ -31,7 +32,7 @@ class Node2VecEnsmallen(EnsmallenEmbedder):
         random_state: int = 42,
         ring_bell: bool = False,
         enable_cache: bool = False,
-        **model_kwargs: Dict
+        **model_kwargs: Dict,
     ):
         """Create new abstract Node2Vec method.
 
@@ -65,7 +66,7 @@ class Node2VecEnsmallen(EnsmallenEmbedder):
         self._model = Node2VecEnsmallen.MODELS[model_name](
             embedding_size=embedding_size,
             random_state=random_state,
-            **self._model_kwargs
+            **self._model_kwargs,
         )
 
         super().__init__(

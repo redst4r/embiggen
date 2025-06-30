@@ -73,7 +73,9 @@ setup(
         "ddd_subplots>=1.0.27",
         "sanitize_ml_labels>=1.0.50",
         "keras_mixed_sequence>=1.0.28",
-        "ensmallen>=0.8.94",
+        # "ensmallen>=0.8.94"
+        # "ensmallen @ file:///home/michi/ms_python_packages/ensmallen/bindings/python/wheels/ensmallen-0.8.98-cp37-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+        "ensmallen @ file:///home/michi/ms_python_packages/ensmallen/bindings/python/wheels/ensmallen-0.8.98-cp37-abi3-manylinux_2_39_x86_64.whl",
         "environments_utils>=1.0.10",
         "compress_pickle>=2.1.0",
         "validate_version_code",
