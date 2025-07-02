@@ -1,4 +1,5 @@
 """Module providing abstract Node2Vec implementation."""
+
 from typing import Dict, Any
 from ensmallen import Graph
 import pandas as pd
@@ -20,7 +21,7 @@ class Node2VecEnsmallen(EnsmallenEmbedder):
         "Node2Vec CBOW": models.CBOW,
         "Node2Vec SkipGram": models.SkipGram,
         "Node2Vec GloVe": models.GloVe,
-        "Node2Vec Dreamwalk": models.DreamWalk,
+        "Node2Vec Dreamwalk": models.DreamWalk,  # refers to ensmallen.bindings Node2VecBinding.DreamWalk (which is a Rust-struct with python bindings)
         "Walklets CBOW": models.WalkletsCBOW,
         "Walklets SkipGram": models.WalkletsSkipGram,
         "Walklets GloVe": models.WalkletsGloVe,
@@ -97,6 +98,7 @@ class Node2VecEnsmallen(EnsmallenEmbedder):
         return_dataframe: bool = True,
     ) -> EmbeddingResult:
         """Return node embedding."""
+        # print("hi from Node2VecEnsmallen._fit_transform", self._model)
         node_embeddings = self._model.fit_transform(graph)
 
         if "CBOW" in self.model_name():

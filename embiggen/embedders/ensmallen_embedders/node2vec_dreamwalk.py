@@ -33,6 +33,8 @@ class Node2VecDreamwalkEnsmallen(Node2VecEnsmallen):
         dtype: str = "f32",
         ring_bell: bool = False,
         enable_cache: bool = False,
+        # nodetype_aware_skipgram: bool = True,
+        # edgetype_aware_walk: bool = True,
         verbose: bool = True,
     ):
         """Create new abstract Node2Vec method.
@@ -143,6 +145,8 @@ class Node2VecDreamwalkEnsmallen(Node2VecEnsmallen):
             random_state=random_state,
             ring_bell=ring_bell,
             enable_cache=enable_cache,
+            # nodetype_aware_skipgram=nodetype_aware_skipgram,
+            # edgetype_aware_walk=edgetype_aware_walk,
             verbose=verbose,
         )
 

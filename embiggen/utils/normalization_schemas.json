@@ -466,5 +466,7 @@
     "lambd": "float",
     "beta": "float",
     "lower_control": "float",
-    "eta": "float"
+    "eta": "float",
+    "edgetype_transition_file": "str",
+    "nodetype_aware_skipgram": "bool"
 }
