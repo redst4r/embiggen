@@ -34,7 +34,7 @@ class Node2VecDreamwalkEnsmallen(Node2VecEnsmallen):
         ring_bell: bool = False,
         enable_cache: bool = False,
         # nodetype_aware_skipgram: bool = True,
-        # edgetype_aware_walk: bool = True,
+        edgetype_transition_file: str = "empty",  # TODO: ugly, this should be optional
         verbose: bool = True,
     ):
         """Create new abstract Node2Vec method.
@@ -120,6 +120,7 @@ class Node2VecDreamwalkEnsmallen(Node2VecEnsmallen):
             it will appear in the notebook kernel in some
             systems but not necessarily.
         """
+        print("ET file", edgetype_transition_file)
         super().__init__(
             embedding_size=embedding_size,
             epochs=epochs,
@@ -145,8 +146,7 @@ class Node2VecDreamwalkEnsmallen(Node2VecEnsmallen):
             random_state=random_state,
             ring_bell=ring_bell,
             enable_cache=enable_cache,
-            # nodetype_aware_skipgram=nodetype_aware_skipgram,
-            # edgetype_aware_walk=edgetype_aware_walk,
+            edgetype_transition_file=edgetype_transition_file,
             verbose=verbose,
         )
 

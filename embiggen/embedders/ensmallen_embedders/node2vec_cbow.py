@@ -1,4 +1,5 @@
 """Module providing Node2Vec CBOW model implementation."""
+
 from typing import Optional, Dict, Any
 from embiggen.embedders.ensmallen_embedders.node2vec import Node2VecEnsmallen
 
@@ -32,7 +33,8 @@ class Node2VecCBOWEnsmallen(Node2VecEnsmallen):
         dtype: str = "f32",
         ring_bell: bool = False,
         enable_cache: bool = False,
-        verbose: bool = True
+        edgetype_transition_file: str = "empty",  # TODO: ugly, this should be optional
+        verbose: bool = True,
     ):
         """Create new abstract Node2Vec method.
 
@@ -142,16 +144,13 @@ class Node2VecCBOWEnsmallen(Node2VecEnsmallen):
             random_state=random_state,
             ring_bell=ring_bell,
             enable_cache=enable_cache,
+            edgetype_transition_file=edgetype_transition_file,
             verbose=verbose,
         )
-    
+
     def parameters(self) -> Dict[str, Any]:
         """Returns parameters for smoke test."""
-        removed = [
-            "change_node_type_weight",
-            "change_edge_type_weight",
-            "alpha"
-        ]
+        removed = ["change_node_type_weight", "change_edge_type_weight", "alpha"]
         return dict(
             **{
                 key: value
@@ -164,3 +163,4 @@ class Node2VecCBOWEnsmallen(Node2VecEnsmallen):
     def model_name(cls) -> str:
         """Returns name of the model."""
         return "Node2Vec CBOW"
+

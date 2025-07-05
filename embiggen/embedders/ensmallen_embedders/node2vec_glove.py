@@ -1,6 +1,8 @@
 """Module providing Node2Vec GloVe model implementation."""
+
 from typing import Optional, Dict, Any
 from embiggen.embedders.ensmallen_embedders.node2vec import Node2VecEnsmallen
+
 
 class Node2VecGloVeEnsmallen(Node2VecEnsmallen):
     """Class providing Node2Vec GloVe implemeted in Rust from Ensmallen."""
@@ -26,7 +28,8 @@ class Node2VecGloVeEnsmallen(Node2VecEnsmallen):
         random_state: int = 42,
         ring_bell: bool = False,
         enable_cache: bool = False,
-        verbose: bool = True
+        edgetype_transition_file: str = "empty",  # TODO: ugly, this should be optional
+        verbose: bool = True,
     ):
         """Create new Node2Vec GloVe model.
 
@@ -123,6 +126,7 @@ class Node2VecGloVeEnsmallen(Node2VecEnsmallen):
             enable_cache=enable_cache,
             ring_bell=ring_bell,
             random_state=random_state,
+            edgetype_transition_file=edgetype_transition_file,
             verbose=verbose,
         )
 
@@ -132,7 +136,7 @@ class Node2VecGloVeEnsmallen(Node2VecEnsmallen):
             "change_node_type_weight",
             "change_edge_type_weight",
             "number_of_negative_samples",
-            "iterations"
+            "iterations",
         ]
         return dict(
             **{
@@ -146,3 +150,4 @@ class Node2VecGloVeEnsmallen(Node2VecEnsmallen):
     def model_name(cls) -> str:
         """Returns name of the model."""
         return "Node2Vec GloVe"
+
