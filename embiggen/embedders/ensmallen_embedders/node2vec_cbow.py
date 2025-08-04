@@ -34,6 +34,8 @@ class Node2VecCBOWEnsmallen(Node2VecEnsmallen):
         ring_bell: bool = False,
         enable_cache: bool = False,
         edgetype_transition_file: str = "empty",  # TODO: ugly, this should be optional
+        teleport_probability: float = 0.0,
+        teleport_file: str = "empty",  # TODO: ugly, this should be optional
         verbose: bool = True,
     ):
         """Create new abstract Node2Vec method.
@@ -145,6 +147,8 @@ class Node2VecCBOWEnsmallen(Node2VecEnsmallen):
             ring_bell=ring_bell,
             enable_cache=enable_cache,
             edgetype_transition_file=edgetype_transition_file,
+            teleport_probability=teleport_probability,
+            teleport_file=teleport_file,
             verbose=verbose,
         )
 
@@ -163,4 +167,3 @@ class Node2VecCBOWEnsmallen(Node2VecEnsmallen):
     def model_name(cls) -> str:
         """Returns name of the model."""
         return "Node2Vec CBOW"
-

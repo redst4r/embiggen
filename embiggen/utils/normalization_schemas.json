@@ -468,5 +468,7 @@
     "lower_control": "float",
     "eta": "float",
     "edgetype_transition_file": "str",
+    "teleport_probability": "float",
+    "teleport_file": "str",
     "nodetype_aware_skipgram": "bool"
 }

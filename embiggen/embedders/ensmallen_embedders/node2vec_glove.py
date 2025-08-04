@@ -29,6 +29,8 @@ class Node2VecGloVeEnsmallen(Node2VecEnsmallen):
         ring_bell: bool = False,
         enable_cache: bool = False,
         edgetype_transition_file: str = "empty",  # TODO: ugly, this should be optional
+        teleport_probability: float = 0.0,
+        teleport_file: str = "empty",  # TODO: ugly, this should be optional
         verbose: bool = True,
     ):
         """Create new Node2Vec GloVe model.
@@ -127,6 +129,8 @@ class Node2VecGloVeEnsmallen(Node2VecEnsmallen):
             ring_bell=ring_bell,
             random_state=random_state,
             edgetype_transition_file=edgetype_transition_file,
+            teleport_probability=teleport_probability,
+            teleport_file=teleport_file,
             verbose=verbose,
         )
 
@@ -150,4 +154,3 @@ class Node2VecGloVeEnsmallen(Node2VecEnsmallen):
     def model_name(cls) -> str:
         """Returns name of the model."""
         return "Node2Vec GloVe"
-

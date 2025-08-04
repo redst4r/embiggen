@@ -33,8 +33,9 @@ class Node2VecDreamwalkEnsmallen(Node2VecEnsmallen):
         dtype: str = "f32",
         ring_bell: bool = False,
         enable_cache: bool = False,
-        # nodetype_aware_skipgram: bool = True,
         edgetype_transition_file: str = "empty",  # TODO: ugly, this should be optional
+        teleport_probability: float = 0.0,
+        teleport_file: str = "empty",  # TODO: ugly, this should be optional
         verbose: bool = True,
     ):
         """Create new abstract Node2Vec method.
@@ -147,6 +148,8 @@ class Node2VecDreamwalkEnsmallen(Node2VecEnsmallen):
             ring_bell=ring_bell,
             enable_cache=enable_cache,
             edgetype_transition_file=edgetype_transition_file,
+            teleport_probability=teleport_probability,
+            teleport_file=teleport_file,
             verbose=verbose,
         )
 
